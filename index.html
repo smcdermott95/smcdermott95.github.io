@@ -1,104 +1,209 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-  <title>Sargent McDermott</title>
-  <meta name="Description" content="I'm a NIU student"/>
+  <head>
+    <script src="https://rawgit.com/mourner/suncalc/master/suncalc.js" type="text/javascript"></script>
+    <script src="moment-with-locales.js" type="text/javascript"></script>
+    <script src="location.js" type="text/javascript"></script>
+    <script src="locationDB.js" type="text/javascript"></script>
+    <script src="app.js" type="text/javascript"></script>
 
-  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <style>
+      #inputInterface
+      {
+        padding:0;
+        margin-bottom:-216px;
+      }
 
-  <!-- Bootstrap -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+      .inputSelection {
+        border-radius: 10px;
+        background: #cccccc;
+        padding: 10px;
+      }
 
-  <style>
-  :root {
-    --pageColor: #e1f5fe;
-    --navMainColor: #01579b;
-    --borderCol: #01579b;
-    --selectedBoxColor: #0277bd;
-    --selectedColorText: #ffffff;
-    --textColor: #b3e5fc;
-    --highlightedTextColor: #ffffff;
-    --dropdownBoxColor: #40c4ff;
-    --dropdownMenuColor: #0091ea;
-    --dropdownTextColor: #ffffff;
-    --brandHighlightedTextColor: #ffffff;
-  }
-  </style>
+      .inputTitle {
+        text-align: center;
+        padding:0px;
+        margin: 4px;
+        font-weight: bold;
+      }
 
-  <link rel="stylesheet" type="text/css" href="stylesheet.css">
+      #location {
+        width: 250px;
+      }
 
-  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-  <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-  <![endif]-->
+      #dateTime {
+        width: 300px;
+        position: relative;
+        left: 300px;
+        top: -120px;
+      }
 
+      #playDiv
+      {
+        width: 300px;
+        position: relative;
+        left: 650px;
+        top: -228px;
+      }
+    </style>
 
-</head>
-<body>
+    <title>unnamed App</title>
+  </head>
+  <body>
+    <h1>Unnamed App</h1>
+    <p>
+      Description: A tool that allows one to visualize the movement of the sun,
+      moon and stars accross the sky at a certain location.
+      <a href="https://github.com/smcdermott95/Sun-Moon-Stars-Animation-Astronomy-">Github page</a>
+    </p>
 
-
-
-  <nav class="navbar navbar-default">
-    <div class="container-fluid">
-
-      <!--Logo/Title-->
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#mainNavBar">
-          <!--<span class="glyphicon glyphicon-menu-hamburger"></span>-->
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a href="#" class="navbar-brand">Sargent McDermott</a>
-      </div>
-
-      <!--Menu-->
-      <div class="collapse navbar-collapse" id="mainNavBar">
-        <ul class="nav navbar-nav">
-          <li class="active"><a href="#">Home</a></li>
-
-          <!--Drop down-->
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">My Projects<span class="caret"></span></a>
-
-            <ul class="dropdown-menu">
-              <li><a href="./pages/sunApp/index.html">Sun App</a></li>
-            </ul>
-
-          </li>
-          <li><a href="./pages/about/index.html">About Me</a></li>
-          <li><a href="./pages/contact/index.html">Contact</a></li>
-        </ul>
-      </div>
-
+    <div id=inputInterface>
+    <!--location line-->
+    <div class="inputSelection" id="location">
+      <p class="inputTitle">Location</p>
+      Name:
+      <select id="locationName" onchange="changeLocationName()">
+        <option value="custom">custom</option>
+        <script>
+          var locationDB = new LocationDB();
+          for(var i=0; i<locationDB.locationVec.length;i++)
+          {
+            document.write('<option value="'+locationDB.locationVec[i].name+'">'+locationDB.locationVec[i].name+'</option>');
+          }
+        </script>
+      </select><br>
+      Lattitude:
+      <select onchange="changeLocation()" id="latDeg">
+        <script>
+          for(var i=0; i<=89;i++)
+          {
+            document.write('<option value="'+i+'">'+i+'</option>');
+          }
+        </script>
+      </select>°
+      <select onchange="changeLocation()" id="latMin">
+        <script>
+          for(var i=0; i<=59;i++)
+          {
+            document.write('<option value="'+i+'">'+i+'</option>');
+          }
+        </script>
+      </select>'
+      <select onchange="changeLocation()" id="vHemi">
+        <option value="n">N</option>
+        <option value="s">S</option>
+      </select><br>
+      Longitude:
+      <select onchange="changeLocation()" id="lonDeg">
+        <script>
+          for(var i=0; i<=179;i++)
+          {
+            document.write('<option value="'+i+'">'+i+'</option>');
+          }
+        </script>
+      </select>°
+      <select onchange="changeLocation()" id="lonMin">
+        <script>
+          for(var i=0; i<=59;i++)
+          {
+            document.write('<option value="'+i+'">'+i+'</option>');
+          }
+        </script>
+      </select>'
+      <select onchange="changeLocation()" id="hHemi">
+        <option value="w">W</option>
+        <option value="e">E</option>
+      </select><br>
+      Timezone:
+      <select onchange="handleTimezoneChange()" id="timezone">
+        <script>
+          for(var i=-12; i<=12;i++)
+          {
+            document.write('<option value="'+i+'">'+i+'</option>');
+          }
+        </script>
+      </select>
+      <br>
     </div>
-  </nav>
 
-  <!--Page content-->
-  <div class="container">
-    <div class="jumbotron">
-      <h1>Home</h1>
+
+    <!--Date line-->
+    <div class="inputSelection" id="dateTime">
+      <p class="inputTitle">Date and Time</p>
+      Date:
+      <select onchange="changeDate()" id="month">
+        <script>
+          for(var i=1; i<=12;i++)
+          {
+            document.write('<option value="'+i+'">'+i+'</option>');
+          }
+        </script>
+      </select>
+      <select onchange="changeDate()" id="day">
+      </select>
+      <select onchange="changeDate()" id="year">
+        <script>
+          for(var i=1990; i<=2025;i++)
+          {
+            document.write('<option value="'+i+'">'+i+'</option>');
+          }
+        </script>
+      </select><br>
+        Time
+      <select onchange="changeDate()" id="hour">
+        <script>
+            document.write('<option value="12">12</option>');
+            for(var i=1; i<=11;i++)
+            {
+              document.write('<option value="'+i+'">'+i+'</option>');
+            }
+        </script>
+      </select>
+      <select onchange="changeDate()" id="min">
+        <script>
+          for(var i=0; i<=59;i++)
+          {
+            document.write('<option value="'+i+'">'+i+'</option>');
+          }
+        </script>
+      </select>
+      <select id="ampm" onchange="changeDate()">
+        <option value="a">AM</option>
+        <option value="p">PM</option>
+      </select>
+      <input type="radio" name="clockType" id="clockType12" value="12"  onclick="updateClockType()" checked>12hr
+      <input type="radio" name="clockType" id="clockType24" value="24" onclick="updateClockType()" >24hr<br>
+      <button type="button" id="currentButton" onclick="now()">Use Current Time</button>
     </div>
-    <div class="panel panel-default">
-      <div class="panel-heading"><h3>Website Updated</h3></div>
-      <div class="panel-body">    <p>March 16, 2017: Added "About Me" and "Contact" Pages.</p></div>
+
+    <div class="inputSelection" id="playDiv">
+      <p class="inputTitle">Animation</p>
+      <button type="button" id="playbutton" onclick="playInitialize()">Play</button>
+      <input type="checkbox" id="playStart" value="beginning">Start at beginning of day?<br><hr>
+      Frame Rate: <input type="text" id="frameRate" size="1" value="24" onchange="handleFrameRateChange()"> FPS<br>
+      Play Speed: 1 Second=<input type="text" id="playSpeed" size="1" value="60" onchange="handleSpeedChange()"> minutes
+    </div>
     </div>
 
-    <div class="panel panel-default">
-      <div class="panel-heading"><h3>Website Created</h3></div>
-      <div class="panel-body">    <p>February 13, 2017: I am Sargent. This website is under construction.</p></div>
+    <p id="infoPanel">info panel</p>
+
+    <div id="canvasesdiv" style="position:relative; width:1200px; height:600px">
+      <canvas id="skyCanvas" style="z-index: 1; position:absolute; left:0px; top:0px;" width="1200" height="600"></canvas>
+      <canvas id="graphCanvas" style="z-index: 2; position:absolute; left:0px; top:0px;" width="1200" height="600"></canvas>
+      <canvas id="sunPointsCanvas" style="z-index: 3; position:absolute; left:0px; top:0px;" width="1200" height="600"></canvas>
+      <canvas id="sunMoonStarCanvas" style="z-index: 4; position:absolute; left:0px; top:0px;" width="1200" height="600"></canvas>
     </div>
-  </div>
 
 
-  <!-- Include all compiled plugins (below), or include individual files as needed -->
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-</body>
+    <script>
+      //var locationDB = new LocationDB();
+      initializeStarsArrays(120);
+      initializeCanvases();
+      tempStartLocation();
+      now();
+    </script>
+    <br>
+
+    <p>Copyright(c) Sargent McDermott. All Rights Reserved.</p>
+  </body>
 </html>
